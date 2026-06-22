@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TechPark Notas",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sistema de notas de penalidades",
   "update_url": "https://igoraraujocruz.github.io/technote/update.xml",
   "permissions": [
