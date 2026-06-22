@@ -1,21 +1,20 @@
 {
   "manifest_version": 3,
   "name": "TechPark Notas",
-  "version": "1.0.0",
-  "description": "Sistema de notas com infrações e comentários inteligentes",
+  "version": "1.0.1",
+  "description": "Sistema de notas de penalidades",
   "update_url": "https://igoraraujocruz.github.io/technote/update.xml",
   "permissions": [
     "storage"
   ],
-
   "host_permissions": [
     "https://*.supabase.co/*"
   ],
-
   "content_scripts": [
     {
       "matches": [
-        "https://pi.techpratico.net/*"
+        "https://pi.techpratico.net/*",
+        "https://ma.techpratico.net/*"
       ],
       "js": [
         "supabase-lib.js",
@@ -24,17 +23,6 @@
       ],
       "css": [
         "styles.css"
-      ]
-    }
-  ],
-
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "penalidades.json"
-      ],
-      "matches": [
-        "https://pi.techpratico.net/*"
       ]
     }
   ]

@@ -17,13 +17,6 @@ let currentAvatar = null;
 let initializing = false;
 
 
-/*
-========================================
-UTILS
-========================================
-*/
-
-
 function storageKey() {
   return "notes_" + videoId;
 }
@@ -123,12 +116,6 @@ function destroyUI() {
   }
 }
 
-/*
-========================================
-RENACH
-========================================
-*/
-
 function getRenach() {
 
   const rows = document.querySelectorAll(
@@ -151,13 +138,6 @@ function getRenach() {
 
   return null;
 }
-
-
-/*
-========================================
-PENALIDADES
-========================================
-*/
 
 async function loadPenalidades(
   force = false
@@ -242,10 +222,6 @@ async function forceRefreshPenalidades() {
   );
 
   try {
-
-    /*
-      feedback visual
-    */
     if (btn) {
 
       btn.disabled = true;
@@ -271,9 +247,6 @@ async function forceRefreshPenalidades() {
 
     refreshingPenalidades = false;
 
-    /*
-      restaura botão
-    */
     if (btn) {
 
       btn.disabled = false;
@@ -282,12 +255,6 @@ async function forceRefreshPenalidades() {
     }
   }
 }
-
-/*
-========================================
-NOTAS
-========================================
-*/
 
 async function loadSavedPenalidades(
   renach
@@ -421,10 +388,6 @@ async function loadNotes() {
 
   container.innerHTML = "";
 
-
-  /*
-    SEM NOTAS
-  */
   if (!data.length) {
     container.innerHTML = `
       <div class="empty-notes">
@@ -435,9 +398,6 @@ async function loadNotes() {
     return;
   }
 
-  /*
-    HISTÓRICO
-  */
   data.forEach(note => {
 
     const div =
@@ -467,9 +427,6 @@ async function loadNotes() {
       </button>
     `;
 
-    /*
-      clicar vai no tempo
-    */
     div.onclick = (e) => {
 
       if (
@@ -492,9 +449,6 @@ async function loadNotes() {
       }
     };
 
-    /*
-      deletar
-    */
     div
       .querySelector(
         ".delete-btn"
@@ -549,9 +503,6 @@ function updateUserInfo() {
       "yt-avatar-wrapper"
     );
 
-  /*
-  NOME
-  */
   if (nameEl) {
     nameEl.textContent =
       currentNome || "";
@@ -563,31 +514,19 @@ function updateUserInfo() {
         "block";
   }
 
-  /*
-  AVATAR
-  */
   if (avatarEl) {
-
     if (currentAvatar) {
-
-      
-
       if (avatarWrapper) {
         avatarWrapper.style.display =
           "flex";
       }
-
     } else {
-
       avatarEl.removeAttribute(
         "src"
       );
-
       avatarEl.src = "";
-
       avatarEl.style.display =
         "none";
-
       if (avatarWrapper) {
         avatarWrapper.style.display =
           "none";
@@ -595,12 +534,6 @@ function updateUserInfo() {
     }
   }
 }
-
-/*
-========================================
-UI
-========================================
-*/
 
 function createUI() {
 
@@ -781,9 +714,6 @@ async function resolverProblema() {
       "Problema marcado como resolvido!"
     );
 
-    /*
-    remove destaque da tabela
-    */
     await processTabelaProblemas(true);
 
   } finally {
@@ -809,9 +739,6 @@ async function setupPlaybackSpeed() {
     return;
   }
 
-  /*
-  velocidade salva
-  */
   const saved =
     await chrome.storage.local.get([
       playbackSpeedKey()
@@ -825,9 +752,6 @@ async function setupPlaybackSpeed() {
   select.value =
     String(savedSpeed);
 
-  /*
-  aplica no vídeo atual
-  */
   const video = getVideo();
 
   if (video) {
@@ -836,9 +760,6 @@ async function setupPlaybackSpeed() {
       Number(savedSpeed);
   }
 
-  /*
-  troca velocidade
-  */
   select.onchange =
     async () => {
 
@@ -875,9 +796,6 @@ function loadPosition() {
       const pos =
         res[positionKey()];
 
-      /*
-      posição padrão
-      */
       let left =
         window.innerWidth - 380;
 
@@ -889,33 +807,21 @@ function loadPosition() {
         top = pos.top;
       }
 
-      /*
-      tamanho da janela
-      */
       const rect =
         el.getBoundingClientRect();
 
       const margin = 20;
 
-      /*
-      limite horizontal
-      */
       const maxLeft =
         window.innerWidth -
         rect.width -
         margin;
 
-      /*
-      limite vertical
-      */
       const maxTop =
         window.innerHeight -
         rect.height -
         margin;
 
-      /*
-      corrige overflow
-      */
       left = Math.max(
         margin,
         Math.min(left, maxLeft)
@@ -926,9 +832,6 @@ function loadPosition() {
         Math.min(top, maxTop)
       );
 
-      /*
-      aplica
-      */
       el.style.left =
         left + "px";
 
@@ -938,9 +841,6 @@ function loadPosition() {
       el.style.right =
         "auto";
 
-      /*
-      salva posição corrigida
-      */
       savePosition(left, top);
     }
   );
@@ -1018,12 +918,6 @@ function savePosition(
     }
   });
 }
-
-/*
-========================================
-SEARCH
-========================================
-*/
 
 function setupSearch() {
 
@@ -1213,12 +1107,6 @@ function setupSearch() {
   }
 }
 
-/*
-========================================
-QUICK COMMENTS
-========================================
-*/
-
 function loadQuickComments() {
 
   const container =
@@ -1298,12 +1186,6 @@ function clearQuickComments() {
     el.innerHTML = "";
   }
 }
-
-/*
-========================================
-EVENTOS
-========================================
-*/
 
 function setupEvents() {
 
@@ -1463,12 +1345,6 @@ function setupDrag() {
   };
 }
 
-/*
-========================================
-SEND PLATFORM
-========================================
-*/
-
 async function sendToPlatform() {
 
   const box =
@@ -1510,13 +1386,6 @@ async function sendToPlatform() {
         p =>
           p.tipo === note.infracao
       );
-
-    /*
-      pega apenas:
-      Art. 169
-      Art. 170
-      etc
-    */
     let artigo = "";
 
     if (penalidade?.tipo) {
@@ -1559,12 +1428,6 @@ ${artigo} - ${descricao}`;
     })
   );
 }
-
-/*
-========================================
-FULLSCREEN
-========================================
-*/
 
 function injectCustomFullscreen() {
   
@@ -1637,26 +1500,15 @@ function injectCustomFullscreen() {
   Object.assign(btn.style, {
     position: "absolute",
     zIndex: "999999",
-
-    /*
-    tamanho menor
-    */
     width: "34px",
     height: "34px",
-
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-
     padding: "0",
-
-    /*
-    posições diferentes
-    */
     bottom: isFullscreen
       ? "40px"
       : "35px",
-
     right: isFullscreen
       ? "95px"
       : "50px"
@@ -1691,10 +1543,6 @@ document.addEventListener(
     }
   };
 
-  /*
-  move painel para dentro
-  do fullscreen
-*/
 const notes =
   document.getElementById(
     "yt-notes"
@@ -1711,12 +1559,6 @@ if (
   wrapper.appendChild(btn);
 }
 
-/*
-========================================
-INIT
-========================================
-*/
-
 async function highlightProblemasTabela() {
 
   const rows = document.querySelectorAll(
@@ -1727,9 +1569,6 @@ async function highlightProblemasTabela() {
     return;
   }
 
-  /*
-  pega todos os renachs da tabela
-  */
   const renachs = [];
 
   rows.forEach(row => {
@@ -1755,9 +1594,6 @@ async function highlightProblemasTabela() {
     return;
   }
 
-  /*
-  busca problemas ativos
-  */
   const { data, error } =
     await supabaseClient
       .from("problemas")
@@ -1776,9 +1612,6 @@ async function highlightProblemasTabela() {
     return;
   }
 
-  /*
-  transforma em mapa
-  */
   const problemasMap =
     new Map();
 
@@ -1790,9 +1623,6 @@ async function highlightProblemasTabela() {
     );
   });
 
-  /*
-  estiliza linhas
-  */
   rows.forEach(row => {
 
     const cells =
@@ -1811,10 +1641,6 @@ async function highlightProblemasTabela() {
       problemasMap.get(
         renach
       );
-
-    /*
-    limpa estilos antigos
-    */
     row.style.background = "";
     row.removeAttribute(
       "title"
@@ -1835,10 +1661,6 @@ async function highlightProblemasTabela() {
 }
 
 async function init() {
-
-  /*
-    evita loop concorrente
-  */
   if (initializing) {
     return;
   }
@@ -1867,11 +1689,6 @@ currentAvatar = avatar;
 
 updateUserInfo();
 
-/*
-========================================
-SEM CANDIDATO
-========================================
-*/
 if (!nome) {
 
   currentRenach = null;
@@ -1880,7 +1697,6 @@ if (!nome) {
 
   return;
 }
-
 
     if (renach) {
 
@@ -1905,9 +1721,6 @@ if (!nome) {
       }
     }
 
-    /*
-      cria UI
-    */
     if (
       !document.getElementById(
         "yt-notes"
@@ -1919,16 +1732,10 @@ if (!nome) {
       loadExistingPenalidades();
     }
 
-    /*
-      vídeo
-    */
     const video = getVideo();
 
     const hasVideo = !!video;
 
-    /*
-      saiu do vídeo
-    */
     if (!hasVideo) {
 
       if (wasOnVideo) {
@@ -1951,9 +1758,6 @@ if (!nome) {
       return;
     }
 
-    /*
-      entrou no vídeo
-    */
     if (!wasOnVideo) {
 
       console.log(
@@ -1971,9 +1775,6 @@ if (!nome) {
 
     if (!id) return;
 
-    /*
-      vídeo mudou
-    */
     if (videoId !== id) {
 
       videoId = id;
@@ -2029,9 +1830,6 @@ async function processTabelaProblemas(force = false) {
     return;
   }
 
-  /*
-  gera hash simples
-  */
   const hash = rows
     .map(row =>
       row.children[1]
@@ -2040,9 +1838,6 @@ async function processTabelaProblemas(force = false) {
     )
     .join("|");
 
-  /*
-  só bloqueia se NÃO for force
-  */
   if (!force && hash === lastTabelaHash) {
     return;
   }
@@ -2152,9 +1947,6 @@ function loadExistingPenalidades() {
     return;
   }
 
-  /*
-  busca cards da plataforma
-  */
   const cards =
     document.querySelectorAll(
       ".preposto-falta-card"
@@ -2222,9 +2014,6 @@ function loadExistingPenalidades() {
         ".yt-x"
       );
 
-    /*
-    CHECK
-    */
     checkBtn.onclick = async () => {
 
   item.classList.remove(
@@ -2236,9 +2025,6 @@ function loadExistingPenalidades() {
       "yt-existing-approved"
     );
 
-  /*
-    remove se desmarcou
-  */
   if (!approved) {
     return;
   }
@@ -2250,9 +2036,6 @@ function loadExistingPenalidades() {
       ? video.currentTime
       : 0;
 
-  /*
-    salva no banco
-  */
   await supabaseClient
     .from("notes")
     .insert({
@@ -2265,9 +2048,6 @@ function loadExistingPenalidades() {
 
   loadNotes();
 };
-    /*
-    X
-    */
     xBtn.onclick = () => {
 
       item.classList.remove(
@@ -2282,11 +2062,6 @@ function loadExistingPenalidades() {
     container.appendChild(item);
   });
 }
-/*
-========================================
-SPA OBSERVER
-========================================
-*/
 
 function setupProblemaTooltip() {
 
@@ -2360,9 +2135,6 @@ Object.assign(
   }
 );
 
-  /*
-  seta do tooltip
-  */
   const arrow =
     document.createElement("div");
 
@@ -2475,9 +2247,6 @@ Object.assign(
   `).join("")}
 `;
 
-      /*
-      evita sair da tela
-      */
       const tooltipWidth =
         360;
 
@@ -2529,10 +2298,6 @@ const observer =
   new MutationObserver(
     mutations => {
 
-      /*
-        ignora mudanças
-        da própria extensão
-      */
       const validMutation =
         mutations.some(m => {
 
