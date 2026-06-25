@@ -1021,16 +1021,20 @@ function setupSearch() {
       }
 
       const results =
-        penalidades.filter(
-          p =>
-            p.tipo
-              .toLowerCase()
-              .includes(value) ||
-            p.descricao
-              .toLowerCase()
-              .includes(value)
-        );
+  penalidades.filter(p => {
 
+    const tipo =
+      p.tipo?.toLowerCase() || "";
+
+    const descricao =
+      p.descricao?.toLowerCase() || "";
+
+    return (
+      tipo.includes(value) ||
+      descricao.includes(value)
+    );
+  });
+      
       renderList(results);
     }
   );
@@ -1856,11 +1860,15 @@ async function processTabelaProblemas(force = false) {
     return;
   }
 
-  console.log(
-    "Consultando problemas..."
-  );
+  let data;
+let error;
 
-  const { data, error } =
+try {
+
+  console.log("Consultando problemas...");
+  console.log("Renachs:", renachs);
+
+  const result =
     await supabaseClient
       .from("problemas")
       .select(`
@@ -1871,12 +1879,26 @@ async function processTabelaProblemas(force = false) {
       .in("renach", renachs)
       .eq("resolvido", false);
 
-  if (error) {
+  data = result.data;
+  error = result.error;
 
-    console.error(error);
+  console.log("Resposta:", result);
 
-    return;
-  }
+} catch (err) {
+
+  console.error("ERRO:", err);
+  return;
+}
+
+if (error) {
+  console.error(error);
+  return;
+}
+
+if (!data) {
+  console.error("Data veio vazia");
+  return;
+}
 
   const problemasMap =
     new Map();
